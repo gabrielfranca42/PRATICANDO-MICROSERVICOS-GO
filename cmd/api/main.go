@@ -2,12 +2,12 @@ package main
 
 import "github.com/gin-gonic/gin"
 
-func main () {
+func main() {
 	r := gin.Default()
-	r.GET("/ping", func(c *gin.Context)) {
+	r.GET("/healty", func(c *gin.Context) {
 		c.JSON(200, gin.H{
-			"xdxd"
+			"rodou esa porra ": true,
 		})
-	}
-	r.Run()
+	})
+	r.Run(":8080")
 }
