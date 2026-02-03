@@ -1,16 +1,16 @@
 package services
 
 import (
-	"log"
-
 	entitiesmodels "github.com/gabrielfranca42/go-microservices/internal/entities_models"
+	"github.com/gabrielfranca42/go-microservices/internal/entities_models/repository"
 )
 
 type CreateCategoryUseCase struct {
+	repository repository.ICategoryRepository
 }
 
-func NewCreateCategoryUseCase() *CreateCategoryUseCase {
-	return &CreateCategoryUseCase{}
+func NewCreateCategoryUseCase(repository repository.ICategoryRepository) *CreateCategoryUseCase {
+	return &CreateCategoryUseCase{repository}
 }
 
 func (u *CreateCategoryUseCase) Execute(name string) error {
@@ -20,7 +20,11 @@ func (u *CreateCategoryUseCase) Execute(name string) error {
 		return err
 	}
 
-	log.Println(category)
+	err = u.repository.Save(category)
+
+	if err != nil {
+		return err
+	}
 
 	return nil
 }
