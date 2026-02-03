@@ -4,4 +4,5 @@ import entitiesmodels "github.com/gabrielfranca42/go-microservices/internal/enti
 
 type ICategoryRepository interface {
 	Save(category *entitiesmodels.Category) error
+	List () ([ ] *entitiesmodels.Category,error)
 }

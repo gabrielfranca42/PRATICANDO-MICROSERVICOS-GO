@@ -14,6 +14,11 @@ func NewInMemoryCategoryRepository() *inMemoryCategoryRepository {
 
 func (r *inMemoryCategoryRepository) Save(category *entitiesmodels.Category) error {
 	r.db = append(r.db, category)
-
 	return nil
+}
+
+
+func (r *inMemoryCategoryRepository) List()([] *entitiesmodels.Category, error)  {
+
+	return r.db, nil
 }

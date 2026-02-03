@@ -1,21 +1,43 @@
 package main
 
 import (
-	"github.com/gabrielfranca42/go-microservices/cmd/api/controllers"
+	"log"
+	"net/http"
+	"os"
+
 	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
+
+	c_routes "github.com/gabrielfranca42/go-microservices/cmd/api/routes"
+	infraDb "github.com/gabrielfranca42/go-microservices/internal/infra/db"
 )
 
 func main() {
+	err := godotenv.Load()
+	env := os.Getenv("ENVIRONMENT")
+	if env == "local" {
+		if err != nil {
+			log.Fatal("Error loading .env file")
+		}
+	} else {
+		gin.SetMode(gin.ReleaseMode)
+	}
+
 	r := gin.Default()
 
-	r.GET("/healty", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"rodou essa porra": true,
-		})
+	r.GET("/healthy", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{"success": true})
 	})
 
-	// registra rotas de categoria
-	r.POST("/categories", controllers.CreateCategory)
+	db, err := infraDb.InitDb()
+
+	if err != nil {
+		panic(err)
+	}
+
+	infraDb.MigrateModels(db)
+
+	c_routes.CategoryRoutes(r, db)
 
 	r.Run(":8080")
 }
